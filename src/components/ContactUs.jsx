@@ -1,6 +1,7 @@
 import React from "react";
 import Title from "./Title";
 import assets from "../assets/assets";
+import toast from "react-hot-toast";
 
 const ContactUs = () => {
   const [result, setResult] = React.useState("");
@@ -10,21 +11,24 @@ const ContactUs = () => {
     setResult("Sending....");
     const formData = new FormData(event.target);
 
-    formData.append("access_key", "YOUR_ACCESS_KEY_HERE");
+    formData.append("access_key", "4ed5879d-0030-4c64-80bf-2356148f7495");
 
-    const response = await fetch("https://api.web3forms.com/submit", {
-      method: "POST",
-      body: formData,
-    });
+    try {
+      const response = await fetch("https://api.web3forms.com/submit", {
+        method: "POST",
+        body: formData,
+      });
 
-    const data = await response.json();
+      const data = await response.json();
 
-    if (data.success) {
-      setResult("Form Submitted Successfully");
-      event.target.reset();
-    } else {
-      console.log("Error", data);
-      setResult(data.message);
+      if (data.success) {
+        toast.success("Thank you for submitting! ");
+        event.target.reset();
+      } else {
+        toast.error(data.message);
+      }
+    } catch (error) {
+      toast.error(error.message);
     }
   };
   return (
